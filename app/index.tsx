@@ -56,11 +56,14 @@ export default function Product() {
 
   const [cart, setCart] = useState(array);
 
-  const tax = 192;
   const totalValue = useMemo(
     () => cart.reduce((acc, item) => acc + item.price, 0),
     [cart]
   );
+
+  const tax = useMemo(() => {
+    return totalValue * 0.18;
+  }, [totalValue]); // Dependency should be totalValue, not cart
 
   function removeItem(id: number) {
     const updateCart = cart.filter((item) => item.id !== id);
@@ -73,7 +76,7 @@ export default function Product() {
         backgroundColor: "#1F2326",
         paddingInline: 16,
         height: "100%",
-        paddingBottom: 30,
+        marginBottom: 30,
       }}
     >
       <Stack.Screen
@@ -105,7 +108,6 @@ export default function Product() {
               >
                 <TextCust
                   style={{
-                    paddingLeft: 2,
                     color: "#AFAFAF",
                     fontSize: 20,
                     padding: 16,
@@ -113,242 +115,278 @@ export default function Product() {
                 >
                   Empty Cart
                 </TextCust>
+                <Pressable
+                  onPress={() => setCart(array)}
+                  style={{
+                    padding: 8,
+                    backgroundColor: "#BEFD4F",
+                    borderRadius: 8,
+                  }}
+                >
+                  <TextCust
+                    style={{
+                      padding: 8,
+                      color: "black",
+                    }}
+                  >
+                    Reset Cart
+                  </TextCust>
+                </Pressable>
               </View>
             )}
 
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingBlock: 16,
-              }}
-            >
+            {cart.length > 0 && (
               <View
                 style={{
-                  paddingInline: 3,
                   display: "flex",
                   flexDirection: "row",
-                  alignItems: "center",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  paddingBlock: 16,
+                  gap: 8,
                 }}
               >
-                <TextCust>Blueberry store</TextCust>
-                <View style={{ paddingLeft: 7 }}>
-                  <Image source={require("../assets/images/badge-check.png")} />
-                </View>
-
-                <TextCust style={{ paddingLeft: 2, color: "#AFAFAF" }}>
-                  buyok verifed
-                </TextCust>
-              </View>
-              <TextCust>ETA 5-7 working days</TextCust>
-            </View>
-          </View>
-          {!isPromoVisible ? (
-            <Pressable
-              onPress={() => setIsPromoVisible(true)}
-              style={{
-                borderWidth: 0,
-                borderTopWidth: 0.5,
-                borderTopColor: "#AFAFAF50",
-
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 16,
-              }}
-            >
-              <View style={{ paddingRight: 4 }}>
-                <Image source={require("../assets/images/tag.png")} />
-              </View>
-              <TextCust>Apply promo code</TextCust>
-            </Pressable>
-          ) : (
-            <View
-              style={{
-                padding: 16,
-                position: "relative",
-                borderWidth: 0,
-                borderTopWidth: 0.5,
-                borderTopColor: "#AFAFAF50",
-              }}
-            >
-              <TextInput
-                value={promoCode}
-                onChangeText={(value) => setPromoCode(value)}
-                onFocus={() => {
-                  if (promoCode) {
-                    seatFocused(true);
-                    return;
-                  }
-                  seatFocused(!focused);
-                }}
-                onBlur={() => {
-                  if (promoCode !== "") return;
-                  seatFocused(!focused);
-                }}
-                style={{
-                  borderColor: promoCode ? "#81FBB9" : "#82A090",
-                  borderWidth: 1,
-                  borderRadius: 8,
-                  padding: 16,
-                  color: promoCode ? "#81FBB9" : "#82A090",
-                }}
-              />
-
-              <TextCust
-                style={{
-                  position: "absolute",
-                  left: 32,
-                  top: focused ? 10 : 32,
-                  backgroundColor: "#35393C",
-                  color: promoCode ? "#81FBB9" : "#82A090",
-                  transitionDuration: "500ms",
-                  transitionProperty: "all",
-                  transitionTimingFunction: "ease-in",
-                }}
-              >
-                Promo Code
-              </TextCust>
-
-              <Pressable
-                onPress={() => {
-                  if (!isPromoCodeAppplied) {
-                    setIsPromoCodeApplied(true);
-                  } else {
-                    setPromoCode("");
-                    seatFocused(false);
-                    setIsPromoCodeApplied(false);
-                  }
-                }}
-                style={{
-                  position: "absolute",
-                  top: 16,
-                  right: 32,
-                  height: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TextCust
+                <View
                   style={{
-                    color: "#81FBB9",
-                    textDecorationLine: "underline",
+                    paddingInline: 3,
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
                 >
-                  {isPromoCodeAppplied ? "Remove" : "Apply"}
-                </TextCust>
-              </Pressable>
-            </View>
+                  <TextCust>Blueberry store</TextCust>
+                  <View style={{ paddingLeft: 7 }}>
+                    <Image
+                      source={require("../assets/images/badge-check.png")}
+                    />
+                  </View>
+
+                  <TextCust style={{ paddingLeft: 2, color: "#AFAFAF" }}>
+                    buyok verifed
+                  </TextCust>
+                </View>
+
+                <View style={{ flexDirection: "row", flexShrink: 1 }}>
+                  <TextCust style={{ fontSize: 14, color: "white" }}>
+                    ETA 5-7 working days
+                  </TextCust>
+                </View>
+              </View>
+            )}
+          </View>
+          {cart.length > 0 && (
+            <>
+              {!isPromoVisible ? (
+                <Pressable
+                  onPress={() => setIsPromoVisible(true)}
+                  style={{
+                    borderWidth: 0,
+                    borderTopWidth: 0.5,
+                    borderTopColor: "#AFAFAF50",
+
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    padding: 16,
+                  }}
+                >
+                  <View style={{ paddingRight: 4 }}>
+                    <Image source={require("../assets/images/tag.png")} />
+                  </View>
+                  <TextCust>Apply promo code</TextCust>
+                </Pressable>
+              ) : (
+                <View
+                  style={{
+                    padding: 16,
+                    position: "relative",
+                    borderWidth: 0,
+                    borderTopWidth: 0.5,
+                    borderTopColor: "#AFAFAF50",
+                  }}
+                >
+                  <TextInput
+                    value={promoCode}
+                    onChangeText={(value) => setPromoCode(value)}
+                    onFocus={() => {
+                      if (promoCode) {
+                        seatFocused(true);
+                        return;
+                      }
+                      seatFocused(!focused);
+                    }}
+                    onBlur={() => {
+                      if (promoCode !== "") return;
+                      seatFocused(!focused);
+                    }}
+                    style={{
+                      borderColor: promoCode ? "#81FBB9" : "#82A090",
+                      borderWidth: 1,
+                      borderRadius: 8,
+                      padding: 16,
+                      color: promoCode ? "#81FBB9" : "#82A090",
+                    }}
+                  />
+
+                  <TextCust
+                    style={{
+                      position: "absolute",
+                      left: 32,
+                      top: focused ? 10 : 32,
+                      backgroundColor: "#35393C",
+                      color: promoCode ? "#81FBB9" : "#82A090",
+                      transitionDuration: "500ms",
+                      transitionProperty: "all",
+                      transitionTimingFunction: "ease-in",
+                    }}
+                  >
+                    Promo Code
+                  </TextCust>
+
+                  <Pressable
+                    onPress={() => {
+                      if (!isPromoCodeAppplied) {
+                        setIsPromoCodeApplied(true);
+                      } else {
+                        setPromoCode("");
+                        seatFocused(false);
+                        setIsPromoCodeApplied(false);
+                      }
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: 16,
+                      right: 32,
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <TextCust
+                      style={{
+                        color: "#81FBB9",
+                        textDecorationLine: "underline",
+                      }}
+                    >
+                      {isPromoCodeAppplied ? "Remove" : "Apply"}
+                    </TextCust>
+                  </Pressable>
+                </View>
+              )}
+            </>
           )}
         </View>
 
         {/* cart item calculation Ui */}
-        <View style={{ paddingBlock: 19 }}>
-          <View
-            style={{
-              padding: 16,
-              backgroundColor: "#35393C",
-              borderTopLeftRadius: 8,
-              borderTopRightRadius: 8,
-            }}
-          >
-            <View>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  paddingBottom: 16,
-                }}
-              >
-                <TextCust style={{ color: "#AFAFAF" }}>Price</TextCust>
-                <TextCust
-                  style={{ color: "#FFFEFE" }}
-                >{`₹ ${totalValue}`}</TextCust>
-              </View>
+        {cart.length > 0 && (
+          <View style={{ paddingBlock: 19 }}>
+            <View
+              style={{
+                padding: 16,
+                backgroundColor: "#35393C",
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+              }}
+            >
+              <View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    paddingBottom: 16,
+                  }}
+                >
+                  <TextCust style={{ color: "#AFAFAF" }}>Price</TextCust>
+                  <TextCust
+                    style={{ color: "#FFFEFE" }}
+                  >{`₹ ${totalValue}`}</TextCust>
+                </View>
 
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  paddingBottom: 16,
-                }}
-              >
-                <TextCust style={{ color: "#AFAFAF" }}>
-                  Delivery Charge
-                </TextCust>
-                <TextCust style={{ color: "#FFFEFE" }}>Free</TextCust>
-              </View>
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    paddingBottom: 16,
+                  }}
+                >
+                  <TextCust style={{ color: "#AFAFAF" }}>
+                    Delivery Charge
+                  </TextCust>
+                  <TextCust style={{ color: "#FFFEFE" }}>Free</TextCust>
+                </View>
 
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  paddingBottom: 16,
-                }}
-              >
-                <TextCust style={{ color: "#AFAFAF" }}>
-                  Coupon Discount
-                </TextCust>
-                <TextCust style={{ color: "#FFFEFE" }}>
-                  {isPromoCodeAppplied ? "- ₹ 50" : "- ₹ 0"}
-                </TextCust>
-              </View>
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    paddingBottom: 16,
+                  }}
+                >
+                  <TextCust style={{ color: "#AFAFAF" }}>
+                    Coupon Discount
+                  </TextCust>
+                  <TextCust style={{ color: "#FFFEFE" }}>
+                    {isPromoCodeAppplied ? "- ₹ 50" : "- ₹ 0"}
+                  </TextCust>
+                </View>
 
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  paddingBottom: 8,
-                }}
-              >
-                <TextCust style={{ color: "#AFAFAF" }}>Tax</TextCust>
-                <TextCust style={{ color: "#FFFEFE" }}>{`₹ ${tax}`}</TextCust>
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    paddingBottom: 8,
+                  }}
+                >
+                  <TextCust style={{ color: "#AFAFAF" }}>Tax</TextCust>
+                  <TextCust style={{ color: "#FFFEFE" }}>{`₹ ${tax}`}</TextCust>
+                </View>
               </View>
             </View>
+            <View
+              style={{
+                borderTopWidth: 0.5,
+                backgroundColor: "#35393C",
+                borderColor: "#AFAFAF50",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 16,
+                borderBottomLeftRadius: 8,
+                borderBottomRightRadius: 8,
+              }}
+            >
+              <TextCust>Total</TextCust>
+              <TextCust style={{ color: "#D0FFF0" }}>
+                {`₹ ${totalValue + tax - (isPromoCodeAppplied ? 50 : 0)}`}{" "}
+              </TextCust>
+            </View>
           </View>
-          <View
-            style={{
-              borderTopWidth: 0.5,
-              backgroundColor: "#35393C",
-              borderColor: "#AFAFAF50",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              padding: 16,
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
-            }}
-          >
-            <TextCust>Total</TextCust>
-            <TextCust style={{ color: "#D0FFF0" }}>
-              {`₹ ${totalValue + tax - (isPromoCodeAppplied ? 50 : 0)}`}{" "}
-            </TextCust>
-          </View>
-        </View>
+        )}
 
-        <LinearGradient
-          colors={["#81FBB9", "#BEFD4F"]}
-          style={{ borderRadius: 4 }}
-        >
-          <Pressable
-            style={{
-              padding: 14,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+        {cart.length > 0 && (
+          <LinearGradient
+            colors={["#81FBB9", "#BEFD4F"]}
+            style={{ borderRadius: 4 }}
           >
-            <Text style={{ fontSize: 18, lineHeight: 24, color: "#0D0D0D" }}>
-              Proceed to checkout
-            </Text>
-          </Pressable>
-        </LinearGradient>
+            <Pressable
+              style={{
+                padding: 14,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontSize: 18, lineHeight: 24, color: "#0D0D0D" }}>
+                Proceed to checkout
+              </Text>
+            </Pressable>
+          </LinearGradient>
+        )}
       </ScrollView>
     </View>
   );

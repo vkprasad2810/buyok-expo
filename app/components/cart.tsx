@@ -50,8 +50,8 @@ export default function Cart({
         <View
           style={{
             backgroundColor: "#2C3033",
-            height: 23,
-            width: 23,
+            height: 25,
+            width: 25,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
