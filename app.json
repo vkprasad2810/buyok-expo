@@ -13,7 +13,7 @@
     },
 
     "splash": {
-      "image": "./app/react-logo@3x.png",
+      "image": "./assets/images/react-logo.png",
       "resizeMode": "cover",
       "backgroundColor": "#35393C"
     },
