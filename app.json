@@ -17,6 +17,10 @@
         "backgroundColor": "#ffffff"
       }
     },
+    "androidStatusBar": {
+      "backgroundColor": "#1F2326",
+      "translucent": false
+    },
     "web": {
       "bundler": "metro",
       "output": "static",
