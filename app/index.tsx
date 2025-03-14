@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import {
-  Button,
   Image,
   Pressable,
   ScrollView,
@@ -12,13 +11,13 @@ import {
 import Cart from "./components/cart";
 import TextCust from "./components/TextCust";
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function Product() {
   const array = [
     {
       id: 1,
-      title: "Burberry T-shirt 1",
+      title: "Burberry T-shirt",
       price: 2500,
       size: "Medium",
       qty: 2,
@@ -26,7 +25,7 @@ export default function Product() {
     },
     {
       id: 2,
-      title: "Burberry T-shirt 2",
+      title: "Burberry T-shirt",
       price: 2500,
       size: "Medium",
       qty: 2,
@@ -34,7 +33,7 @@ export default function Product() {
     },
     {
       id: 3,
-      title: "Burberry T-shirt 3",
+      title: "Burberry T-shirt",
       price: 2500,
       size: "Medium",
       qty: 2,
@@ -42,7 +41,7 @@ export default function Product() {
     },
     {
       id: 4,
-      title: "Burberry T-shirt 4",
+      title: "Burberry T-shirt",
       price: 2500,
       size: "Medium",
       qty: 2,
@@ -76,7 +75,7 @@ export default function Product() {
         backgroundColor: "#1F2326",
         paddingInline: 16,
         height: "100%",
-        marginBottom: 30,
+        paddingBottom: 20,
       }}
     >
       <Stack.Screen
@@ -166,11 +165,9 @@ export default function Product() {
                   </TextCust>
                 </View>
 
-                <View style={{ flexDirection: "row", flexShrink: 1 }}>
-                  <TextCust style={{ fontSize: 14, color: "white" }}>
-                    ETA 5-7 working days
-                  </TextCust>
-                </View>
+                <TextCust style={{ fontSize: 14, color: "white" }}>
+                  ETA 5-7 working days
+                </TextCust>
               </View>
             )}
           </View>
@@ -228,25 +225,26 @@ export default function Product() {
                     }}
                   />
 
-                  <TextCust
+                  <Text
                     style={{
                       position: "absolute",
                       left: 32,
-                      top: focused ? 10 : 32,
+                      top: focused ? 7 : 32,
                       backgroundColor: "#35393C",
                       color: promoCode ? "#81FBB9" : "#82A090",
                       transitionDuration: "500ms",
                       transitionProperty: "all",
                       transitionTimingFunction: "ease-in",
+                      pointerEvents: "none",
                     }}
                   >
                     Promo Code
-                  </TextCust>
+                  </Text>
 
                   <Pressable
                     onPress={() => {
                       if (!isPromoCodeAppplied) {
-                        setIsPromoCodeApplied(true);
+                        if (promoCode) setIsPromoCodeApplied(true);
                       } else {
                         setPromoCode("");
                         seatFocused(false);
@@ -381,9 +379,11 @@ export default function Product() {
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 18, lineHeight: 24, color: "#0D0D0D" }}>
+              <TextCust
+                style={{ fontSize: 18, lineHeight: 24, color: "#0D0D0D" }}
+              >
                 Proceed to checkout
-              </Text>
+              </TextCust>
             </Pressable>
           </LinearGradient>
         )}

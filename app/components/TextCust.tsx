@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextStyle } from "react-native";
+import { Text, TextStyle, View } from "react-native";
 
 export default function TextCust({
   children,
@@ -8,5 +8,9 @@ export default function TextCust({
   children: React.ReactNode;
   style?: TextStyle;
 }) {
-  return <Text style={style}>{children}</Text>;
+  return (
+    <View style={{ flexShrink: 1 }}>
+      <Text style={style}>{children}</Text>
+    </View>
+  );
 }
