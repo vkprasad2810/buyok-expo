@@ -8,10 +8,11 @@ import {
   TextInput,
   View,
 } from "react-native";
-import Cart from "./components/cart";
+
 import TextCust from "./components/TextCust";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMemo, useState } from "react";
+import Cart from "./components/cart";
 
 export default function Product() {
   const array = [
